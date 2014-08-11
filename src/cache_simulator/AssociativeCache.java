@@ -9,6 +9,7 @@ package cache_simulator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import javax.naming.OperationNotSupportedException;
 
 /**
  *
@@ -21,7 +22,7 @@ public class AssociativeCache extends Cache implements java.io.Serializable{
     /**
      *
      */
-    public ArrayList<HashMap<Integer,Block>> cache;
+    public ArrayList<CacheStructure> cache;
     public Policy replace_policy;
     
     
@@ -54,24 +55,24 @@ public class AssociativeCache extends Cache implements java.io.Serializable{
                 break;
         }
         
-        cache = new ArrayList<HashMap<Integer,Block>>();
+        cache = new ArrayList<CacheStructure>();
         for(int i = 0; i < this.ways; i++){
             int entry_size = (int) Math.round((double)this.size/(double)this.ways);
-            HashMap<Integer,Block> list = new HashMap<Integer,Block>();
+            CacheStructure list = new CacheStructure(this.policy,this.size,this.replace_policy);
             cache.add(list);
             for(int j = 0; j < entry_size; j++){
                 switch(this.policy){
                     case CacheFactory.POLICY_LRU:
                         BlockLRU br = new BlockLRU(null, 0);
-                        list.put(j,br);
+                        list.add(br);
                         break;
                     case CacheFactory.POLICY_LFU:
                         BlockLFU bf = new BlockLFU(null);
-                        list.put(j,bf);
+                        list.add(bf);
                         break;
                     case CacheFactory.POLICY_FIFO:
                         BlockFIFO bfi = new BlockFIFO(null);
-                        list.put(j,bfi);
+                        list.add(bfi);
                         break;
                     default:
                         break;
@@ -96,17 +97,19 @@ public class AssociativeCache extends Cache implements java.io.Serializable{
         }
         hitRateRecord.add((double)hit/(double)access);
         if(this.policy==CacheFactory.POLICY_LFU){
-            for(HashMap<Integer,Block> bs : cache){
+            
+            
+            /*for(HashMap<Integer,Block> bs : cache){
                 for(Integer key : bs.keySet()){
                 //for(Block b : bs){
                     BlockLFU ub = (BlockLFU)bs.get(key);
                     ub.priority--;
                 //}
                 }
-            }
+            }*/
         }
         int index = getEntryIndex(packet);
-        HashMap<Integer,Block> entry = cache.get(index);
+        CacheStructure entry = cache.get(index);
 //        System.out.println(entry.size());
         /*for(Block block : entry){
             if((packet.equals(block.getPacket()))){
@@ -116,7 +119,7 @@ public class AssociativeCache extends Cache implements java.io.Serializable{
             }
         }*/
         
-        if(entry.get(packet.getHashCode())!=null){
+        if(entry.find(packet)){
             this.hit ++;
             return true;
         }
@@ -148,27 +151,27 @@ public class AssociativeCache extends Cache implements java.io.Serializable{
     @Override
     public void insert(Packet packet) {
         
-        HashMap<Integer,Block> entry = cache.get(getEntryIndex(packet));
+        CacheStructure entry = cache.get(getEntryIndex(packet));
         
         switch(this.policy){
             case CacheFactory.POLICY_LFU:
-                PolicyLFU f = (PolicyLFU)this.replace_policy;
+                /*PolicyLFU f = (PolicyLFU)this.replace_policy;
                 if(entry.size()==(int) Math.round((double)this.size/(double)this.ways)){
                     entry.remove(f.findVictim(entry));
                 }
-                entry.put(packet.getHashCode(),new BlockLFU(packet));
+                entry.put(packet.getHashCode(),new BlockLFU(packet));*/
                 break;
             case CacheFactory.POLICY_LRU:
                 PolicyLRU p = (PolicyLRU)this.replace_policy;
-                
-                int victim_index = p.findVictim(entry);
-                entry.remove(victim_index);
-                BlockLRU b = new BlockLRU(packet, p.time);
-                entry.put(packet.getHashCode(),b);
+                entry.add(new BlockLRU(packet, p.time));
+                //int victim_index = p.findVictim(entry);
+                //entry.remove(victim_index);
+                //BlockLRU b = new BlockLRU(packet, p.time);
+                //entry.put(packet.getHashCode(),b);
                 
                 break;
             case CacheFactory.POLICY_FIFO:
-                PolicyFIFO fifo = (PolicyFIFO)this.replace_policy;
+                /*PolicyFIFO fifo = (PolicyFIFO)this.replace_policy;
 //                int index = packet.getHashCode()% this.ways;
                 int index = getEntryIndex(packet);
                 fifo.setIndex(index);
@@ -186,7 +189,7 @@ public class AssociativeCache extends Cache implements java.io.Serializable{
                     fifo.AddNewPacket(index,packet);
                     entry.put(packet.getHashCode(),new BlockFIFO(packet));
                 }
-                break;
+                break;*/
             default:
                 break;
         }

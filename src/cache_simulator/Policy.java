@@ -6,6 +6,7 @@
 
 package cache_simulator;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ import java.util.Map;
  *
  * @author bear
  */
-public interface Policy {
+public interface Policy extends Comparator<Block> {
     
     //This method must be called whenever cache call find().
     public void update();

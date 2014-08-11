@@ -10,6 +10,6 @@ package cache_simulator;
  *
  * @author bear
  */
-public interface Block {
+public interface Block{
     public Packet getPacket();
 }

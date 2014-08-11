@@ -73,5 +73,15 @@ public class PolicyFIFO implements Policy,java.io.Serializable {
        // return linklist.indexOf(linklist.getFirst());
        
     }
+
+    @Override
+    public int compare(Block o1, Block o2) {
+        
+        return 0;
+        
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+   
     
 }

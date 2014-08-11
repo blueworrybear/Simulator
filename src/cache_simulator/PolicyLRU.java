@@ -41,5 +41,17 @@ public class PolicyLRU implements Policy,java.io.Serializable{
         }
         return index;
     }
+
+    @Override
+    public int compare(Block o1, Block o2) {
+        
+        BlockLRU r1,r2;
+        
+        r1 = (BlockLRU)o1;
+        r2 = (BlockLRU)o2;
+        
+        return (int) (r1.time-r2.time);
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

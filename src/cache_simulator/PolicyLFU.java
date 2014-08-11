@@ -45,5 +45,18 @@ public class PolicyLFU implements Policy,java.io.Serializable{
         
         return min_index;
     }
+
+    @Override
+    public int compare(Block o1, Block o2) {
+        
+        BlockLFU f1,f2;
+        
+        f1 = (BlockLFU)o1;
+        f2 = (BlockLFU)o2;
+        
+        return f1.priority-f2.priority;
+        
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
