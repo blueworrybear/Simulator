@@ -52,9 +52,26 @@ public class CacheStructure {
         Block blk = p.poll();
         if(blk==null){
             return false;
-        }       
-        int key = blk.getPacket().getHashCode();
-        m.remove(key);
+        }
+        int key=0;
+        if(blk.getPacket()!=null){
+            key = blk.getPacket().getHashCode();
+        }else{
+            for(int k  : m.keySet()){
+                Block bk = m.get(k);
+                if(bk!=null){
+                    if(bk.getPacket()==null){
+                        key=k;
+                        break;
+                    }
+                }
+            }
+        }
+        Block blkm = m.remove(key);
+        
+        if(blkm==null){
+            System.out.println("Warning: Error on remove Hashmap");
+        }
         
         return true;
     }
