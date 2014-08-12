@@ -14,7 +14,7 @@ import java.util.PriorityQueue;
  *
  * @author jybowser
  */
-public class CacheStructure {
+public class CacheStructure implements java.io.Serializable{
     
     HashMap<Integer,Block> m;
     PriorityQueue<Block> p;
