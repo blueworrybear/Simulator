@@ -20,10 +20,10 @@ public class SimpleSwitch_tcp extends SimpleSwitch{
     
     @Override
     public boolean lookup(Packet packet) {
-//        if(!packet.protocol.equals("06")){
+        if(!packet.protocol.equals("06")){
 //            caches.get(packet.portName).accessPlus();
-//            return false;
-//        }
+            return false;
+        }
         switch(switch_type){
             case CENTRAL_CACHE_ONLY:
                 return caches.get(CENTRAL_CACHE).find(packet);

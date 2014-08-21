@@ -114,6 +114,7 @@ public class Main {
         SimpleSwitch sw;
         if(!loading){
             if(CacheProperty.switch_type == CacheProperty.SWITCH_TCP){
+                System.out.println("Running TCP switch now.");
                 sw = new SimpleSwitch_tcp(pNames.toArray(new String[pNames.size()]),is_perport,is_central);
             }else{
                 sw = new SimpleSwitch(pNames.toArray(new String[pNames.size()]),is_perport,is_central);
